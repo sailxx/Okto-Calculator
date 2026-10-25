@@ -1,82 +1,78 @@
 <div align="center">
 
-**Русский** · [English](README.en.md)
+<img src="assets/readme/hero-en.svg" width="100%" alt="Okto Calc — an Android calculator in the Okto style with Google Calculator features">
 
-<br>
+<a href="https://github.com/sailxx/Okto-Calculator/releases/latest/download/OktoCalc.apk"><img src="assets/readme/btn-android-en.svg" height="52" alt="Download for Android"></a>&nbsp;&nbsp;<a href="https://github.com/sailxx/Okto-Calculator/releases/latest"><img src="assets/readme/btn-new-en.svg" height="52" alt="What’s new"></a>
 
-<img src="assets/readme/hero-ru.svg" width="100%" alt="Okto Calc — калькулятор для Android в стиле Okto с функциями Google Калькулятора">
-
-<a href="https://github.com/sailxx/Okto-Calculator/releases/latest/download/OktoCalc.apk"><img src="assets/readme/btn-android-ru.svg" height="52" alt="Скачать для Android"></a>&nbsp;&nbsp;<a href="https://github.com/sailxx/Okto-Calculator/releases/latest"><img src="assets/readme/btn-new-ru.svg" height="52" alt="Что нового"></a>
-
-**Okto Calc — калькулятор для Android с набором функций Google Калькулятора.** Проценты, скобки, инженерный режим и история вычислений; тёмная и светлая темы в стиле [Okto](https://github.com/sailxx/Okto). Работает без интернета, не запрашивает разрешений и не содержит рекламы.
+**Okto Calc is an Android calculator with the feature set of Google Calculator.** Percent, brackets, a scientific mode and calculation history; dark and light themes in the style of [Okto](https://github.com/sailxx/Okto). It works offline, requests no permissions and contains no ads.
 
 </div>
 
 <br>
 
-<img src="assets/readme/features-ru.svg" width="100%" alt="Возможности: вычисления, инженерный режим, история, удобство">
+<img src="assets/readme/features-en.svg" width="100%" alt="Features: calculations, scientific mode, history, convenience">
 
 <details>
-<summary><b>Подробнее о возможностях</b></summary>
+<summary><b>Feature details</b></summary>
 
-### Вычисления
+### Calculations
 
-Проценты считаются от левой части выражения, как в Google Калькуляторе: `50 + 10%` = 55, `50 × 10%` = 5. Кнопка `( )` сама выбирает открывающую или закрывающую скобку, недостающие скобки закрываются при вычислении, произведение без знака (`2π`, `3(1+3)`) понимается корректно. Поддерживаются степень, квадратный корень и факториал. Результат округляется до 12 значащих цифр (`0.1 + 0.2` = 0.3), очень большие и малые числа записываются как `1.5E12`. Ошибки описываются текстом: «Нельзя делить на 0», «Недопустимое значение».
+Percent is taken from the left operand, as in Google Calculator: `50 + 10%` = 55, `50 × 10%` = 5. The `( )` key picks an opening or closing bracket by itself, missing brackets are closed on evaluation, and implicit multiplication (`2π`, `3(1+3)`) is handled correctly. Powers, square root and factorial are supported. Results are rounded to 12 significant digits (`0.1 + 0.2` = 0.3); very large and very small numbers use `1.5E12` notation. Errors are reported in plain text: “Can't divide by 0”, “Invalid input”.
 
-### Инженерный режим
+### Scientific mode
 
-Кнопка **f(x)** на табло открывает панель: `sin`, `cos`, `tan`, `ln`, `log`, `π`, `e`, `xʸ`, `x²`, `x⁻¹`, `x!`, `√`, `|x|`. Кнопка **Inv** переключает функции на обратные: `sin⁻¹`, `cos⁻¹`, `tan⁻¹`, `eˣ`, `10ˣ`, `x³`. Единицы углов — градусы или радианы (переключатель DEG/RAD), значения вроде `sin(180°)` дают точный ноль. В альбомной ориентации инженерные клавиши всегда расположены слева от основных.
+The **f(x)** button on the display opens a panel: `sin`, `cos`, `tan`, `ln`, `log`, `π`, `e`, `xʸ`, `x²`, `x⁻¹`, `x!`, `√`, `|x|`. **Inv** switches the functions to their inverses: `sin⁻¹`, `cos⁻¹`, `tan⁻¹`, `eˣ`, `10ˣ`, `x³`. Angles are in degrees or radians (the DEG/RAD switch); values such as `sin(180°)` yield an exact zero. In landscape orientation the scientific keys always sit to the left of the main ones.
 
-### История
+### History
 
-Последние 100 вычислений сохраняются на устройстве. Нажатие на строку подставляет результат в текущее выражение; список можно очистить.
+The last 100 calculations are stored on the device. Tapping a row inserts its result into the current expression; the list can be cleared.
 
-### Удобство
+### Convenience
 
-Результат отображается под выражением во время набора. Долгое нажатие на табло копирует результат, долгое нажатие на клавишу удаления очищает ввод. Разряды длинных чисел разделяются пробелами (`1 234 567`). Вибро-отклик отключается в настройках.
+The result is shown under the expression while you type. A long press on the display copies the result; a long press on the delete key clears the input. Digits of long numbers are grouped (`1 234 567`). Haptic feedback can be turned off in the settings.
 
 </details>
 
 <br>
 
-<img src="assets/readme/themes-ru.svg" width="100%" alt="Темы: тёмная и светлая Okto">
+<img src="assets/readme/themes-en.svg" width="100%" alt="Themes: Okto dark and light">
 
 <details>
-<summary><b>Оформление</b></summary>
+<summary><b>Appearance</b></summary>
 
-Настройки открываются кнопкой «Настройки» на табло. Обе темы используют раскладку [Okto](https://sailxx.github.io/Okto/): круглые клавиши, табло без рамки с крупными цифрами, шрифты Golos Text и JetBrains Mono. Акцент — оранжевый из иконки приложения: клавиша «равно» и знаки операций. При нажатии круглая клавиша сжимается в скруглённый квадрат.
+Settings open with the “Settings” button on the display. Both themes use the [Okto](https://sailxx.github.io/Okto/) layout: round keys, a frameless display with large digits, Golos Text and JetBrains Mono fonts. The accent is the orange from the app icon: the equals key and the operator signs. A pressed round key squeezes into a rounded square.
 
-- **Тёмная** — графитовый фон, светлые цифры.
-- **Светлая** — та же раскладка на светлом фоне, оранжевый для знаков затемнён для читаемости.
+- **Dark** — graphite background, light digits.
+- **Light** — the same layout on a light background; the operator orange is darkened for legibility.
 
 </details>
 
 <br>
 
-<img src="assets/readme/numbers-ru.svg" width="100%" alt="В цифрах: 1.5 МБ, 0 разрешений, 0 рекламы, 2 темы, 15 инженерных клавиш">
+<img src="assets/readme/numbers-en.svg" width="100%" alt="By the numbers: 1.5 MB, 0 permissions, 0 ads, 2 themes, 15 scientific keys">
 
 <details>
-<summary><b>Установка</b></summary>
+<summary><b>Installation</b></summary>
 
-1. Скачайте [`OktoCalc.apk`](https://github.com/sailxx/Okto-Calculator/releases/latest/download/OktoCalc.apk).
-2. Откройте файл на телефоне и разрешите установку из неизвестных источников.
-3. Требуется Android 8.0 или новее.
+1. Download [`OktoCalc.apk`](https://github.com/sailxx/Okto-Calculator/releases/latest/download/OktoCalc.apk).
+2. Open the file on your phone and allow installation from unknown sources.
+3. Android 8.0 or newer is required.
 
 </details>
 
 <details>
-<summary><b>Разработка</b></summary>
+<summary><b>Development</b></summary>
 
-Kotlin 2.2 и Jetpack Compose (Material 3), сторонних библиотек нет. Вычислитель — собственный рекурсивный парсер, покрытый модульными тестами.
+Kotlin 2.2 and Jetpack Compose (Material 3), no third-party libraries. The evaluator is a hand-written recursive-descent parser covered by unit tests.
 
 ```bash
-./gradlew testDebugUnitTest   # тесты вычислителя
-./gradlew assembleRelease     # APK в app/build/outputs/apk/release/
+./gradlew testDebugUnitTest   # evaluator tests
+./gradlew assembleRelease     # APK in app/build/outputs/apk/release/
 ```
 
-Нужны JDK 17+ и Android SDK (platform 35).
+Requires JDK 17+ and the Android SDK (platform 35).
 
-Изображения для README генерируются на обоих языках (тексты — в `tools/readme/strings.json`), SVG вручную не правятся:
+README images are generated in both languages (texts live in `tools/readme/strings.json`); the SVGs are not edited by hand:
 
 ```bash
 cd tools/readme && npm install && node build.mjs
@@ -84,15 +80,15 @@ cd tools/readme && npm install && node build.mjs
 
 ```
 app/src/main/java/com/sailxx/oktocalc/
-├── MainActivity.kt   — точка входа, экраны, применение темы
-├── Engine.kt         — разбор и вычисление выражений, форматирование
-├── CalcState.kt      — ввод, предпросмотр результата, история
-├── CalcScreen.kt     — табло и раскладки (книжная и альбомная)
-├── Keys.kt           — клавиша
-├── Panels.kt         — история и настройки
-└── Theme.kt          — палитры, шрифты, строки, настройки
+├── MainActivity.kt   — entry point, screens, theme
+├── Engine.kt         — expression parsing, evaluation, formatting
+├── CalcState.kt      — input, live preview, history
+├── CalcScreen.kt     — display and layouts (portrait and landscape)
+├── Keys.kt           — the key
+├── Panels.kt         — history and settings
+└── Theme.kt          — palettes, fonts, strings, settings
 ```
 
-Шрифты Golos Text и JetBrains Mono распространяются по лицензии SIL Open Font License 1.1.
+The Golos Text and JetBrains Mono fonts are distributed under the SIL Open Font License 1.1.
 
 </details>
