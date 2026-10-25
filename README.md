@@ -1,5 +1,9 @@
 <div align="center">
 
+[Русский](README.ru.md) · **English**
+
+<br>
+
 <img src="assets/readme/hero-en.svg" width="100%" alt="Okto Calc — an Android calculator in the Okto style with Google Calculator features">
 
 <a href="https://github.com/sailxx/Okto-Calculator/releases/latest/download/OktoCalc.apk"><img src="assets/readme/btn-android-en.svg" height="52" alt="Download for Android"></a>&nbsp;&nbsp;<a href="https://github.com/sailxx/Okto-Calculator/releases/latest"><img src="assets/readme/btn-new-en.svg" height="52" alt="What’s new"></a>
