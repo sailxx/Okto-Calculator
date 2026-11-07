@@ -46,6 +46,7 @@ private fun App(store: SettingsStore) {
     val view = LocalView.current
 
     state.deg = settings.deg
+    state.keepHistory = settings.keepHistory
     fun update(n: Settings) { settings = n; store.save(n) }
 
     SideEffect {
@@ -65,6 +66,7 @@ private fun App(store: SettingsStore) {
                     state, settings, s,
                     onKey = { k ->
                         if (settings.haptics) view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                        if (settings.sounds) view.playSoundEffect(android.view.SoundEffectConstants.CLICK)
                         state.press(k)
                     },
                     onToggleDeg = { update(settings.copy(deg = !settings.deg)) },

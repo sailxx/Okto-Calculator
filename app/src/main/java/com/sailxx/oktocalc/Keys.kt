@@ -3,11 +3,17 @@ package com.sailxx.oktocalc
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.border
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.draw.shadow
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -40,10 +46,11 @@ private fun colorsFor(kind: KeyKind, c: Palette): Pair<Color, Color> = when (kin
     KeyKind.DIGIT, KeyKind.SCI, KeyKind.DEL -> c.key to c.keyInk
     KeyKind.OP -> c.opKey to c.opInk
     KeyKind.EQ -> c.primary to c.onPrimary
-    KeyKind.CLEAR -> c.key to c.danger
+    KeyKind.CLEAR -> c.key to c.muted
 }
 
-/** Круглая клавиша: при нажатии круг «сжимается» в скруглённый квадрат. */
+/** Terminal keys retain native focus, keyboard activation and long-press semantics. */
+@OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
 fun CalcKey(
     label: String,
@@ -57,43 +64,35 @@ fun CalcKey(
     onTap: () -> Unit,
 ) {
     val c = C
-    var pressed by remember { mutableStateOf(false) }
-    val tap by rememberUpdatedState(onTap)
-    val long by rememberUpdatedState(onLong)
-
+    val interaction = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
+    val pressed by interaction.collectIsPressedAsState()
+    val scale by androidx.compose.animation.core.animateFloatAsState(if (pressed) .96f else 1f, tween(150), label = "keyPress")
     val (bg0, fg0) = colorsFor(kind, c)
     val bg = if (active) c.primary else bg0
     val fg = if (active) c.onPrimary else fg0
-
-    val pct by animateIntAsState(if (pressed) 32 else 50, tween(110), label = "pct")
-    val shape = RoundedCornerShape(pct)
-
-    val gestures = Modifier
-        .semantics {
-            role = Role.Button
-            contentDescription = desc
-            onClick { tap(); true }
-        }
-        .pointerInput(Unit) {
-            detectTapGestures(
-                onPress = { pressed = true; tryAwaitRelease(); pressed = false },
-                onLongPress = { if (long != null) long?.invoke() else tap() },
-                onTap = { tap() },
-            )
-        }
-
-    val content: @Composable () -> Unit = {
-        if (icon != null) icon(fg) else Text(
-            label,
-            color = fg,
-            fontFamily = JbMono,
-            fontWeight = FontWeight.Medium,
-            fontSize = if (small) 13.sp else 28.sp,
-            maxLines = 1,
-        )
+    val shape = CircleShape
+    val description = when (label) {
+        "÷" -> "Divide"; "×" -> "Multiply"; "−" -> "Subtract"; "+" -> "Add"
+        "=" -> "Equals"; "±" -> "Change sign"; "AC" -> "Clear all"; "." -> "Decimal point"
+        else -> desc
     }
-
-    Box(modifier.clip(shape).background(bg).then(gestures), contentAlignment = Alignment.Center) { content() }
+    // Keep keys circular even when their grid cells are rectangular.
+    BoxWithConstraints(modifier, contentAlignment = Alignment.Center) {
+    val diameter = minOf(maxWidth, maxHeight)
+    Box(
+        Modifier.size(diameter)
+            .graphicsLayer { scaleX = scale; scaleY = scale }
+            .clip(shape).background(bg)
+            .semantics { contentDescription = description }
+            .combinedClickable(interactionSource = interaction, indication = androidx.compose.foundation.LocalIndication.current,
+                role = Role.Button, onLongClick = onLong, onClick = onTap),
+        contentAlignment = Alignment.Center,
+    ) {
+        if (icon != null) icon(fg) else Text(label, color = fg,
+            fontFamily = androidx.compose.ui.text.font.FontFamily.SansSerif,
+            fontWeight = FontWeight.Normal, fontSize = if (small) 14.sp else 30.sp, maxLines = 1)
+    }
+    }
 }
 
 @Composable

@@ -1,10 +1,15 @@
 .gradle/
 build/
 local.properties
+.android-sdk/
 .idea/
 *.iml
 .kotlin/
 node_modules/
 
+.sharrowkin/
+
 # Ключ подписи
+*.jks
+*.keystore
 keystore.properties

@@ -12,6 +12,13 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.horizontalScroll
@@ -29,7 +36,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -59,19 +66,20 @@ fun Chip(text: String, modifier: Modifier = Modifier, active: Boolean = false, o
     val fg = if (active) c.onPrimary else c.wellDim
     Box(
         modifier
-            .clip(RoundedCornerShape(8.dp))
+            .size(48.dp)
+            .clip(CircleShape)
             .background(bg)
             .clickable(onClick = onClick)
             .padding(horizontal = 11.dp, vertical = 6.dp),
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text.uppercase(),
+            text,
             color = fg,
-            fontFamily = JbMono,
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 11.sp,
-            letterSpacing = 0.8.sp,
+            fontFamily = FontFamily.SansSerif,
+            fontWeight = FontWeight.Normal,
+            fontSize = 12.sp,
+            letterSpacing = 0.sp,
             maxLines = 1,
         )
     }
@@ -87,8 +95,8 @@ private fun DisplayLine(text: String, size: Float, color: androidx.compose.ui.gr
             text,
             modifier = Modifier.horizontalScroll(scroll),
             color = color,
-            fontFamily = JbMono,
-            fontWeight = if (bold) FontWeight.Medium else FontWeight.SemiBold,
+            fontFamily = FontFamily.SansSerif,
+            fontWeight = if (bold) FontWeight.Light else FontWeight.Normal,
             fontSize = sz.sp,
             lineHeight = (sz * 1.15f).sp,
             maxLines = 1,
@@ -152,21 +160,23 @@ fun Display(
             }
             .padding(horizontal = 6.dp, vertical = 4.dp),
     ) {
-        Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+            NavigationIcon(true, "Calculation history", onHistory)
+            Spacer(Modifier.weight(1f))
             Chip(if (state.deg) s.deg else s.rad, onClick = onToggleDeg)
             if (showSciToggle) Chip("f(x)", active = sciOpen, onClick = onToggleSci)
             Spacer(Modifier.weight(1f))
-            Chip(s.history, onClick = onHistory)
-            Chip(s.settings, onClick = onSettings)
+            NavigationIcon(false, "Open settings", onSettings)
         }
         Spacer(Modifier.weight(1f))
-        // Выражение — крупно, пока набираем; после «=» крупным становится результат.
-        if (state.evaluated) {
-            DisplayLine(second, small, c.wellDim, false)
-            DisplayLine(main, bigSize(main.length), c.wellInk, true)
-        } else {
-            DisplayLine(main, bigSize(main.length), c.wellInk, true)
-            DisplayLine(second.ifEmpty { " " }, small, secondColor, false)
+        Column(Modifier.fillMaxWidth().padding(bottom = 16.dp)) {
+            if (state.evaluated) {
+                DisplayLine(second, small, c.wellDim, false)
+                DisplayLine(main, bigSize(main.length), c.wellInk, true)
+            } else {
+                DisplayLine(main, bigSize(main.length), c.wellInk, true)
+                DisplayLine(second.ifEmpty { " " }, small, secondColor, false)
+            }
         }
     }
 }
@@ -176,11 +186,11 @@ fun Display(
 private class KeyDef(val id: String, val label: String, val kind: KeyKind, val desc: String = label)
 
 private val mainRows = listOf(
-    listOf(KeyDef("AC", "AC", KeyKind.CLEAR), KeyDef("()", "( )", KeyKind.OP), KeyDef("%", "%", KeyKind.OP), KeyDef("÷", "÷", KeyKind.OP)),
+    listOf(KeyDef("AC", "AC", KeyKind.CLEAR), KeyDef("±", "±", KeyKind.CLEAR), KeyDef("%", "%", KeyKind.CLEAR), KeyDef("÷", "÷", KeyKind.OP)),
     listOf(KeyDef("7", "7", KeyKind.DIGIT), KeyDef("8", "8", KeyKind.DIGIT), KeyDef("9", "9", KeyKind.DIGIT), KeyDef("×", "×", KeyKind.OP)),
     listOf(KeyDef("4", "4", KeyKind.DIGIT), KeyDef("5", "5", KeyKind.DIGIT), KeyDef("6", "6", KeyKind.DIGIT), KeyDef("−", "−", KeyKind.OP)),
     listOf(KeyDef("1", "1", KeyKind.DIGIT), KeyDef("2", "2", KeyKind.DIGIT), KeyDef("3", "3", KeyKind.DIGIT), KeyDef("+", "+", KeyKind.OP)),
-    listOf(KeyDef("0", "0", KeyKind.DIGIT), KeyDef(".", ".", KeyKind.DIGIT), KeyDef("DEL", "⌫", KeyKind.DEL), KeyDef("=", "=", KeyKind.EQ)),
+    listOf(KeyDef("DEL", "⌫", KeyKind.DEL), KeyDef("0", "0", KeyKind.DIGIT), KeyDef(".", ".", KeyKind.DIGIT), KeyDef("=", "=", KeyKind.EQ)),
 )
 
 private fun sciKeys(inv: Boolean, deg: Boolean, s: Strings): List<KeyDef> = listOf(
@@ -199,6 +209,8 @@ private fun sciKeys(inv: Boolean, deg: Boolean, s: Strings): List<KeyDef> = list
     KeyDef("x²", if (inv) "x³" else "x²", KeyKind.SCI),
     KeyDef("x⁻¹", "x⁻¹", KeyKind.SCI),
     KeyDef("abs", "|x|", KeyKind.SCI),
+    KeyDef("()", "( )", KeyKind.SCI),
+    KeyDef("DEL", "⌫", KeyKind.DEL),
 )
 
 @Composable
@@ -255,13 +267,14 @@ fun CalcScreen(
                 Display(state, s, sciOpen, true, { sciOpen = !sciOpen }, onToggleDeg, onHistory, onSettings,
                     Modifier.fillMaxWidth().weight(1f))
                 AnimatedVisibility(sciOpen, enter = expandVertically() + fadeIn(), exit = shrinkVertically() + fadeOut()) {
-                    Column(Modifier.fillMaxWidth().height(46.dp * 3 + 8.dp * 2), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Column(Modifier.fillMaxWidth().height(minOf(200.dp, this@BoxWithConstraints.maxHeight * 0.29f)), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         for (row in sci.chunked(5)) KeyRow(row, 8.dp, state, s, handle, Modifier.weight(1f).fillMaxWidth())
                     }
                 }
-                // Клавиши квадратные (круглые), пока хватает высоты; на низких экранах сплющиваются в овалы.
+                // Reserve room for the display when the scientific panel is expanded.
                 val side = (this@BoxWithConstraints.maxWidth - gap * 3) / 4
-                val padHeight = minOf(side * 5 + gap * 4, this@BoxWithConstraints.maxHeight * 0.64f)
+                val available = this@BoxWithConstraints.maxHeight
+                val padHeight = minOf(side * 5 + gap * 4, available * if (sciOpen) 0.43f else 0.64f)
                 MainPad(state, s, gap, onKey, Modifier.fillMaxWidth().height(padHeight))
             }
         }

@@ -24,6 +24,7 @@ class CalcState(context: Context) {
         private set
     var deg by mutableStateOf(true)
 
+    var keepHistory = true
     val history = mutableStateListOf<HistoryItem>().apply { addAll(loadHistory()) }
 
     /** Результат «на лету»: показывается серым под выражением, пока оно не равно простому числу. */
@@ -62,6 +63,7 @@ class CalcState(context: Context) {
             "x⁻¹" -> if (operandEnd()) { evaluated = false; expr += "^(−1)" }
             "inv" -> inv = !inv
             "=" -> equals()
+            "±" -> { expr = toggleSign(expr); evaluated = false }
             "DEL" -> delete()
             "AC" -> clear()
         }
@@ -103,7 +105,7 @@ class CalcState(context: Context) {
         if (expr.isEmpty() || evaluated) return
         try {
             val f = fmt(Engine.eval(expr, deg))
-            if (f != expr) {
+            if (keepHistory && f != expr) {
                 history.add(0, HistoryItem(expr, f))
                 while (history.size > 100) history.removeAt(history.lastIndex)
                 saveHistory()
@@ -118,8 +120,7 @@ class CalcState(context: Context) {
 
     private fun delete() {
         evaluated = false
-        val token = TOKENS.firstOrNull { expr.endsWith(it) }
-        expr = expr.dropLast(token?.length ?: 1)
+        expr = deleteLastInput(expr)
     }
 
     fun clear() { expr = ""; prevExpr = ""; evaluated = false }
@@ -145,11 +146,6 @@ class CalcState(context: Context) {
 
     companion object {
         private val DIGITS = ('0'..'9').map { it.toString() }.toSet()
-        /** Что стирается за одно нажатие ⌫ — длинные токены вперёд. */
-        private val TOKENS = listOf("sin⁻¹(", "cos⁻¹(", "tan⁻¹(", "^(−1)", "sin(", "cos(", "tan(", "log(", "abs(", "e^(", "10^(", "ln(", "√(")
-            .sortedByDescending { it.length }
-
-        /** Группировка разрядов для показа: 1 234 567. */
         fun pretty(s: String, sep: String): String =
             Regex("(?<![\\d.])(\\d{4,})").replace(s) { m ->
                 m.value.reversed().chunked(3).joinToString(sep).reversed()

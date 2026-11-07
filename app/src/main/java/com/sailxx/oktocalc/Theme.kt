@@ -46,7 +46,10 @@ enum class Lang {
 
 data class Settings(
     val kind: ThemeKind = ThemeKind.SYSTEM,
-    val lang: Lang = Lang.system(),
+    val lang: Lang = Lang.EN,
+    val orangeAccent: Boolean = false,
+    val sounds: Boolean = false,
+    val keepHistory: Boolean = true,
     val deg: Boolean = true,
     val haptics: Boolean = true,
 )
@@ -56,13 +59,19 @@ class SettingsStore(context: Context) {
 
     fun load() = Settings(
         kind = enumOr(prefs.getString("kind", null), ThemeKind.SYSTEM),
-        lang = enumOr(prefs.getString("lang", null), Lang.system()),
+        lang = Lang.EN,
+        orangeAccent = prefs.getBoolean("orangeAccent", false),
+        sounds = prefs.getBoolean("sounds", false),
+        keepHistory = prefs.getBoolean("keepHistory", true),
         deg = prefs.getBoolean("deg", true),
         haptics = prefs.getBoolean("haptics", true),
     )
 
     fun save(s: Settings) {
         prefs.edit()
+            .putBoolean("orangeAccent", s.orangeAccent)
+            .putBoolean("sounds", s.sounds)
+            .putBoolean("keepHistory", s.keepHistory)
             .putString("kind", s.kind.name)
                         .putString("lang", s.lang.name).putBoolean("deg", s.deg).putBoolean("haptics", s.haptics)
             .apply()
@@ -124,7 +133,7 @@ val OktoLightPalette = Palette(
 
 @Immutable
 class AppTheme(val c: Palette) {
-    val font: FontFamily get() = Golos
+    val font: FontFamily get() = FontFamily.SansSerif
 }
 
 val LocalAppTheme = staticCompositionLocalOf { AppTheme(OktoPalette) }
@@ -133,13 +142,28 @@ val C: Palette
     @Composable @ReadOnlyComposable get() = LocalAppTheme.current.c
 
 /** [systemDark] — тёмная ли сейчас тема Android; учитывается только для [ThemeKind.SYSTEM]. */
-fun buildTheme(s: Settings, systemDark: Boolean): AppTheme = AppTheme(
-    when (s.kind) {
-        ThemeKind.SYSTEM -> if (systemDark) OktoPalette else OktoLightPalette
-        ThemeKind.OKTO -> OktoPalette
-        ThemeKind.OKTO_LIGHT -> OktoLightPalette
-    }
-)
+fun buildTheme(s: Settings, systemDark: Boolean): AppTheme {
+    val dark = s.kind == ThemeKind.OKTO || (s.kind == ThemeKind.SYSTEM && systemDark)
+    val base = if (dark) OktoPalette else OktoLightPalette
+    return AppTheme(base.copy(
+        bg = if (dark) Color.Black else Color.White,
+        onBg = if (dark) Color(0xFFF5F5F7) else Color(0xFF111111),
+        muted = if (dark) Color(0xFFA1A1A6) else Color(0xFF68686D),
+        surface = if (dark) Color(0xFF1C1C1E) else Color(0xFFF2F2F7),
+        surfaceHi = if (dark) Color(0xFF2C2C2E) else Color(0xFFE5E5EA),
+        key = if (dark) Color(0xFF1C1C1E) else Color(0xFFF2F2F7),
+        keyInk = if (dark) Color(0xFFF5F5F7) else Color(0xFF111111),
+        opKey = if (dark) Color(0xFF303033) else Color(0xFFE5E5EA),
+        opInk = if (dark) Color.White else Color(0xFF111111),
+        well = if (dark) Color.Black else Color.White,
+        wellInk = if (dark) Color(0xFFF5F5F7) else Color(0xFF111111),
+        wellDim = if (dark) Color(0xFFA1A1A6) else Color(0xFF68686D),
+        wellGhost = Color.Transparent,
+        primary = if (s.orangeAccent) Color(0xFFFF971E) else if (dark) Color(0xFFF5F5F7) else Color(0xFF1C1C1E),
+        onPrimary = if (s.orangeAccent || dark) Color.Black else Color.White,
+        outline = if (dark) Color(0xFF38383A) else Color(0xFFDEDEE3),
+    ))
+}
 
 @Composable
 fun OktoTheme(theme: AppTheme, content: @Composable () -> Unit) {
